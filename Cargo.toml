@@ -1,0 +1,17 @@
+[package]
+name = "temporal-rust-worker"
+authors = ["Harsha Teja Kanna <harsha@ekalavya.dev>"]
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+anyhow = "1"
+serde = "1"
+temporal-client = { git = "https://github.com/h7kanna/sdk-core", version = "0.1.0-alpha.1", branch = "workflow-definitions" }
+temporal-sdk = { git = "https://github.com/h7kanna/sdk-core", version = "0.1.0-alpha.1", branch = "workflow-definitions" }
+temporal-sdk-core = { git = "https://github.com/h7kanna/sdk-core", version = "0.1.0-alpha.1", branch = "workflow-definitions" }
+temporal-sdk-core-api = { git = "https://github.com/h7kanna/sdk-core", version = "0.1.0-alpha.1", branch = "workflow-definitions" }
+temporal-sdk-core-protos = { git = "https://github.com/h7kanna/sdk-core", version = "0.1.0-alpha.1", branch = "workflow-definitions" }
+thiserror = "1"
+tokio = "1"
