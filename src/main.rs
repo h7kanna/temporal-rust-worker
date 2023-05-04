@@ -4,11 +4,11 @@ use temporal_sdk::prelude::registry::*;
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut worker = worker::worker().await.unwrap();
     worker.register_activity(
-        "temporal_activity",
+        "sdk_example_activity",
         into_activity_1_args_with_errors(activity::sdk_example_activity),
     );
     worker.register_wf(
-        "temporal_workflow",
+        "sdk_example_workflow",
         into_workflow_1_args(workflow::sdk_example_workflow),
     );
     worker.run().await?;
