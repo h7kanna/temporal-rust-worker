@@ -24,7 +24,7 @@ temporal server start-dev
 ```
 
 ```shell
-cargo run
+cargo run # connects to port 7233 from temporal-frontend
 ```
 
 In a separate terminal:
