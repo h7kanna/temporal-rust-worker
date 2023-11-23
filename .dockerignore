@@ -1,0 +1,24 @@
+# Docker ignore
+## IDE
+.idea
+.vscode
+
+# Git
+.git
+.gitattributes
+.gitignore
+
+## Build artifacts
+**/target/
+**/binaries/
+
+# Documents
+*.md
+mkdocs.yml
+
+## Rust
+## TODO: Fix this, cargo-chef reloads toolchain at each stage.
+rust-toolchain.toml
+rustfmt.toml
+deny.toml
+justfile

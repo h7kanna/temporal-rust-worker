@@ -17,6 +17,11 @@ by [Harsha Teja Kanna](https://www.ekalavya.dev/).
 cargo build
 ```
 
+# Docker build
+```shell
+docker build --build-arg="RUST_TARGET_ARCH=aarch64-unknown-linux-gnu" -t h7kanna/temporal-rust-worker .
+```
+
 # Run
 
 ```shell
