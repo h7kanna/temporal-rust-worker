@@ -1,4 +1,4 @@
-FROM --platform=$TARGETPLATFORM rust:1.74.0-slim AS chef
+FROM --platform=$TARGETPLATFORM rust:1.75.0-slim AS chef
 ARG TARGETPLATFORM
 ARG BUILDPLATFORM
 
