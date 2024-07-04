@@ -3,13 +3,10 @@ use temporal_sdk::prelude::registry::*;
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut worker = worker::worker().await.unwrap();
-    worker.register_activity(
-        "sdk_example_activity",
-        into_activity_1_args_with_errors(activity::sdk_example_activity),
-    );
+    worker.register_activity("sdk_example_activity", activity::sdk_example_activity);
     worker.register_wf(
         "sdk_example_workflow",
-        into_workflow_1_args(workflow::sdk_example_workflow),
+        into_workflow(workflow::sdk_example_workflow),
     );
     worker.run().await?;
     Ok(())
@@ -21,7 +18,7 @@ mod worker {
 
     pub(crate) async fn worker() -> Result<Worker, Box<dyn std::error::Error>> {
         let server_options = sdk_client_options(Url::from_str("http://localhost:7233")?).build()?;
-        let client = server_options.connect("default", None, None).await?;
+        let client = server_options.connect("default", None).await?;
         let telemetry_options = TelemetryOptionsBuilder::default().build()?;
         let runtime = CoreRuntime::new_assume_tokio(telemetry_options)?;
         let task_queue = "example-task-queue";
@@ -37,21 +34,6 @@ mod worker {
 
 mod activity {
     use temporal_sdk::prelude::activity::*;
-
-    #[derive(Debug, thiserror::Error)]
-    #[non_exhaustive]
-    pub enum Error {
-        #[error(transparent)]
-        Io(#[from] std::io::Error),
-        #[error(transparent)]
-        Any(anyhow::Error),
-    }
-
-    impl FromFailureExt for Error {
-        fn from_failure(failure: Failure) -> Error {
-            Error::Any(anyhow::anyhow!("{:?}", failure.message))
-        }
-    }
 
     #[derive(Default, Deserialize, Serialize, Debug, Clone)]
     pub struct ActivityInput {
@@ -69,7 +51,7 @@ mod activity {
     pub async fn sdk_example_activity(
         _ctx: ActContext,
         input: ActivityInput,
-    ) -> Result<(String, ActivityOutput), Error> {
+    ) -> Result<(String, ActivityOutput), ActivityError> {
         Ok((
             format!("Workflow written in {} {}", input.kind, input.language),
             ActivityOutput {
@@ -99,8 +81,8 @@ mod workflow {
     pub async fn sdk_example_workflow(
         ctx: WfContext,
         input: WorkflowInput,
-    ) -> Result<WfExitValue<ActivityOutput>, anyhow::Error> {
-        let output = execute_activity_1_args_with_errors(
+    ) -> Result<ActivityOutput, anyhow::Error> {
+        let output = execute_activity(
             &ctx,
             ActivityOptions {
                 activity_id: Some("sdk_example_activity".to_string()),
@@ -116,7 +98,7 @@ mod workflow {
         )
         .await;
         match output {
-            Ok(output) => Ok(WfExitValue::Normal(output.1)),
+            Ok(output) => Ok(output.1),
             Err(e) => Err(anyhow::Error::from(e)),
         }
     }
