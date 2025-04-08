@@ -2,7 +2,7 @@ use temporal_sdk::prelude::registry::*;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let mut worker = worker::worker().await.unwrap();
+    let mut worker = worker::worker().await?;
     worker.register_activity("sdk_example_activity", activity::sdk_example_activity);
     worker.register_wf(
         "sdk_example_workflow",
@@ -25,7 +25,8 @@ mod worker {
         let worker_config = WorkerConfigBuilder::default()
             .namespace("default")
             .task_queue(task_queue)
-            .worker_build_id("example-rust-worker")
+            .client_identity_override(Some("example-rust-worker".into()))
+            .versioning_strategy(WorkerVersioningStrategy::default())
             .build()?;
         let core_worker = init_worker(&runtime, worker_config, client)?;
         Ok(Worker::new_from_core(Arc::new(core_worker), task_queue))
